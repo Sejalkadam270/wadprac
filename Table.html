@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Table Generator</title>
+<style>
+    table {
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+    table, th, td {
+        border: 1px solid black;
+        padding: 10px;
+    }
+</style>
+</head>
+<body>
+
+<label for="input1">Input 1:</label>
+<input type="text" id="input1" placeholder="Enter values like 3#3#3" /><br/><br/>
+
+<label for="input2">Input 2:</label>
+<input type="text" id="input2" placeholder="Enter values like 3#4#2" /><br/><br/>
+
+<button onclick="generateTables()">Generate Tables</button>
+
+<div id="tables"></div>
+
+<script>
+function generateTables() {
+    var input1 = document.getElementById('input1').value;
+    var input2 = document.getElementById('input2').value;
+    var tablesDiv = document.getElementById('tables');
+    
+    var table1 = createTable(input1);
+    var table2 = createTable(input2);
+    var table3 = createTable(input1); // Table 3 starts as a copy of Table 1
+    
+    // Check if the first cell values of Table 1 and Table 2 match
+    if (table1[0][0] === table2[0][0]) {
+        // If they match, Table 3 remains the same as Table 1
+    } else {
+        // If they don't match, create Table 3 based on the sum of Table 1 and Table 2
+        for (var i = 0; i < table3.length; i++) {
+            for (var j = 0; j < table3[i].length; j++) {
+                table3[i][j] = table1[i][j] * table2[i][j];
+            }
+        }
+    }
+    
+    tablesDiv.innerHTML = '';
+    tablesDiv.appendChild(createHtmlTable(table1));
+    tablesDiv.appendChild(createHtmlTable(table2));
+    tablesDiv.appendChild(createHtmlTable(table3));
+}
+
+function createTable(input) {
+    var dimensions = input.split('#').map(Number);
+    var rows = dimensions[0];
+    var cols = dimensions[1];
+    var startNum = dimensions[2];
+    
+    var table = [];
+    var num = startNum;
+    for (var i = 0; i < rows; i++) {
+        table[i] = [];
+        for (var j = 0; j < cols; j++) {
+            table[i][j] = num;
+            num++;
+        }
+    }
+    return table;
+}
+
+function createHtmlTable(tableData) {
+    var table = document.createElement('table');
+    for (var i = 0; i < tableData.length; i++) {
+        var row = table.insertRow();
+        for (var j = 0; j < tableData[i].length; j++) {
+            var cell = row.insertCell();
+            cell.innerHTML = tableData[i][j];
+        }
+    }
+    return table;
+}
+</script>
+
+</body>
+</html>
